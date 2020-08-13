@@ -52,7 +52,9 @@ class CreateOrderService {
       product => !existentProductsId.includes(product.id),
     );
 
-    if (checkInexistentProducts) {
+    console.log(`checkInexistentProducts:${checkInexistentProducts}`);
+
+    if (checkInexistentProducts.length) {
       throw new AppError(
         `Could not find product ${checkInexistentProducts[0].id}`,
       );
@@ -64,12 +66,11 @@ class CreateOrderService {
         product.quantity,
     );
 
-    if (findProductWithNoQuantityAvailable) {
+    if (findProductWithNoQuantityAvailable.length) {
       throw new AppError(
         `The quantity ${findProductWithNoQuantityAvailable[0].quantity} is not avalible for ${findProductWithNoQuantityAvailable[0].id}`,
       );
     }
-
     const serializedProducts = products.map(product => ({
       product_id: product.id,
       quantity: product.quantity,
