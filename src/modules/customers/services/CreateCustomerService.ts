@@ -17,7 +17,20 @@ class CreateCustomerService {
     private customersRepository: ICustomersRepository,
   ) {}
 
-  public async execute({ name, email }: IRequest): Promise<Customer> {}
+  public async execute({ name, email }: IRequest): Promise<Customer> {
+    const customerExist = await this.customersRepository.findByEmail(email);
+
+    if (customerExist) {
+      throw new AppError('Email já cadastrado');
+    }
+
+    const customer = await this.customersRepository.create({
+      name,
+      email,
+    });
+
+    return customer;
+  }
 }
 
 export default CreateCustomerService;
